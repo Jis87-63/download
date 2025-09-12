@@ -1,4 +1,4 @@
-// 🎵 TUBEFOLLOW MUSIC — BAIXADOR DE MÚSICAS E VÍDEOS
+// 🎵 WORKER DE DOWNLOAD — TUBEFOLLOW MUSIC
 
 export default {
   async fetch(request) {
@@ -35,14 +35,17 @@ export default {
       return handleDownload(videoUrl, format);
     }
 
-    return new Response("Servidor TubeFllow Music ativo. Use /api/search ou /api/download", { status: 200 });
+    // Se não for /api/search ou /api/download, retorna erro 404 em JSON
+    return new Response(JSON.stringify({ error: "Rota não encontrada. Use /api/search ou /api/download" }), {
+      status: 404,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+    });
   },
 };
 
-// ================== BUSCA POR NOME (YOUTUBE) ==================
+// ================== BUSCA POR NOME (SEM CHAVE — API PÚBLICA) ==================
 async function handleSearch(query) {
   try {
-    // Usa API pública alternativa (sem chave)
     const apiUrl = `https://ytsearch.vercel.app/api/search?q=${encodeURIComponent(query)}`;
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -83,7 +86,6 @@ async function handleSearch(query) {
 // ================== DOWNLOAD OU STREAM ==================
 async function handleDownload(videoUrl, format) {
   try {
-    // Usa serviço público (ytpp3.com)
     const apiUrl = `https://ytpp3.com/api/?url=${encodeURIComponent(videoUrl)}&format=${format}`;
     const response = await fetch(apiUrl);
     const data = await response.json();
