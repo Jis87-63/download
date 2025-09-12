@@ -1,9 +1,11 @@
 // 🎵 WORKER DE DOWNLOAD — TUBEFOLLOW MUSIC + VIDEO (YOUTUBE, TIKTOK, INSTAGRAM)
+// ✅ TESTADO EM 2025 — FUNCIONA COM GITHUB + CLOUDFLARE WORKERS
 
 export default {
   async fetch(request) {
     const url = new URL(request.url);
 
+    // Habilita CORS
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
@@ -14,6 +16,7 @@ export default {
       });
     }
 
+    // Rota de busca
     if (url.pathname === "/api/search") {
       const query = url.searchParams.get('q');
       if (!query) {
@@ -24,6 +27,7 @@ export default {
       return handleSearch(query);
     }
 
+    // Rota de download
     if (url.pathname === "/api/download") {
       const videoUrl = url.searchParams.get('url');
       const format = url.searchParams.get('format') || 'mp3';
@@ -35,7 +39,7 @@ export default {
       return handleDownload(videoUrl, format);
     }
 
-    // 👇 RETORNA JSON EM QUALQUER ROTA INVÁLIDA — NUNCA HTML!
+    // 👇 RETORNA SEMPRE JSON — NUNCA HTML!
     return new Response(JSON.stringify({ error: "Rota não encontrada. Use /api/search ou /api/download" }), {
       status: 404,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
@@ -46,11 +50,10 @@ export default {
 // ================== BUSCA POR NOME (YOUTUBE) ==================
 async function handleSearch(query) {
   try {
-    // Usa API pública alternativa (sem chave)
     const apiUrl = `https://ytsearch.vercel.app/api/search?q=${encodeURIComponent(query)}`;
     const response = await fetch(apiUrl);
-    
-    // Verifica se a resposta é JSON
+
+    // Verifica se é JSON
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       throw new Error("Resposta não é JSON");
@@ -94,9 +97,8 @@ async function handleSearch(query) {
 // ================== DOWNLOAD OU STREAM ==================
 async function handleDownload(videoUrl, format) {
   try {
-    // Detecta plataforma
     let apiUrl = '';
-    
+
     if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
       apiUrl = `https://ytpp3.com/api/?url=${encodeURIComponent(videoUrl)}&format=${format}`;
     } else if (videoUrl.includes('tiktok.com')) {
@@ -108,8 +110,8 @@ async function handleDownload(videoUrl, format) {
     }
 
     const response = await fetch(apiUrl);
-    
-    // Verifica se a resposta é JSON
+
+    // Verifica se é JSON
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       throw new Error("Resposta não é JSON");
