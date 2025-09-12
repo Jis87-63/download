@@ -1,4 +1,4 @@
-// 🎵 WORKER DE DOWNLOAD — TUBEFOLLOW MUSIC
+// 🎵 WORKER DE DOWNLOAD — TUBEFOLLOW MUSIC + VIDEO (YOUTUBE, TIKTOK, INSTAGRAM)
 
 export default {
   async fetch(request) {
@@ -35,7 +35,7 @@ export default {
       return handleDownload(videoUrl, format);
     }
 
-    // Se não for /api/search ou /api/download, retorna erro 404 em JSON
+    // 👇 RETORNA JSON EM QUALQUER ROTA INVÁLIDA — NUNCA HTML!
     return new Response(JSON.stringify({ error: "Rota não encontrada. Use /api/search ou /api/download" }), {
       status: 404,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
@@ -43,11 +43,19 @@ export default {
   },
 };
 
-// ================== BUSCA POR NOME (SEM CHAVE — API PÚBLICA) ==================
+// ================== BUSCA POR NOME (YOUTUBE) ==================
 async function handleSearch(query) {
   try {
+    // Usa API pública alternativa (sem chave)
     const apiUrl = `https://ytsearch.vercel.app/api/search?q=${encodeURIComponent(query)}`;
     const response = await fetch(apiUrl);
+    
+    // Verifica se a resposta é JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Resposta não é JSON");
+    }
+
     const data = await response.json();
 
     if (data.videos && data.videos.length > 0) {
@@ -86,25 +94,99 @@ async function handleSearch(query) {
 // ================== DOWNLOAD OU STREAM ==================
 async function handleDownload(videoUrl, format) {
   try {
-    const apiUrl = `https://ytpp3.com/api/?url=${encodeURIComponent(videoUrl)}&format=${format}`;
+    // Detecta plataforma
+    let apiUrl = '';
+    
+    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+      apiUrl = `https://ytpp3.com/api/?url=${encodeURIComponent(videoUrl)}&format=${format}`;
+    } else if (videoUrl.includes('tiktok.com')) {
+      apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(videoUrl)}`;
+    } else if (videoUrl.includes('instagram.com')) {
+      apiUrl = `https://ddinstagram.com/api/?url=${encodeURIComponent(videoUrl)}`;
+    } else {
+      throw new Error("Plataforma não suportada");
+    }
+
     const response = await fetch(apiUrl);
+    
+    // Verifica se a resposta é JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Resposta não é JSON");
+    }
+
     const data = await response.json();
 
-    if (data.success) {
-      return new Response(JSON.stringify({
-        success: true,
-        title: data.title || "",
-        thumbnail: data.thumbnail || "",
-        audio_url: data.audio?.url || "",
-        video_url: data.video?.url || "",
-        duration: data.duration || "",
-        views: data.views || ""
-      }), {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      });
+    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+      if (data.success) {
+        return new Response(JSON.stringify({
+          success: true,
+          title: data.title || "",
+          thumbnail: data.thumbnail || "",
+          audio_url: data.audio?.url || "",
+          video_url: data.video?.url || "",
+          duration: data.duration || "",
+          views: data.views || ""
+        }), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+      }
+    } else if (videoUrl.includes('tiktok.com')) {
+      if (data.code === 0 && data.data) {
+        return new Response(JSON.stringify({
+          success: true,
+          title: data.data.title || "",
+          thumbnail: data.data.cover || "",
+          audio_url: data.data.music_url || "",
+          video_url: data.data.play || "",
+          duration: "",
+          views: ""
+        }), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+      }
+    } else if (videoUrl.includes('instagram.com')) {
+      const text = await response.text();
+      const videoMatch = text.match(/"video_url":"(https?:[^"]+)"/);
+      const imageMatch = text.match(/"display_url":"(https?:[^"]+)"/);
+      
+      if (videoMatch && videoMatch[1]) {
+        return new Response(JSON.stringify({
+          success: true,
+          title: "Instagram Video",
+          thumbnail: "",
+          audio_url: "",
+          video_url: videoMatch[1].replace(/\\u0026/g, '&'),
+          duration: "",
+          views: ""
+        }), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+      } else if (imageMatch && imageMatch[1]) {
+        return new Response(JSON.stringify({
+          success: true,
+          title: "Instagram Image",
+          thumbnail: imageMatch[1].replace(/\\u0026/g, '&'),
+          audio_url: "",
+          video_url: "",
+          duration: "",
+          views: ""
+        }), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+      }
     }
 
     throw new Error(data.error || "Não foi possível processar");
