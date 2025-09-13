@@ -308,7 +308,7 @@
       loading.style.display = 'block';
 
       try {
-        const data = await fetchData(`https://anilist-fllops.carlitosmarques08.workers.dev${endpoint}`);
+        const data = await fetchData(`https://download.carlitosmarques08.workers.dev${endpoint}`);
         
         if (data.error) {
           throw new Error(data.error);
