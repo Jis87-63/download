@@ -1,15 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" id="html">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>fllops.dev — Animes</title>
   <meta name="description" content="Descubra, acompanhe e explore animes. Lançamentos, detalhes, horários de episódios — tudo num só lugar.">
-  <!-- 🔍 Google Search Console -->
-  <meta name="google-site-verification" content="lrfXnDIgUTuzmP2fNC4M6sUOpiewQPZbv2JIgM1xLlk" />
-  <!-- 💰 Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2569329537599023" crossorigin="anonymous"></script>
-  <meta name="google-adsense-account" content="ca-pub-2569329537599023">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -20,6 +15,15 @@
       --card-bg: #2a2a2a;
       --accent: #2d4a9e;
       --shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --text-secondary: #666666;
+      --border: #e0e0e0;
+      --card-bg: #f5f5f5;
+      --accent: #2d4a9e;
     }
 
     * {
@@ -34,6 +38,7 @@
       color: var(--text);
       line-height: 1.6;
       -webkit-text-size-adjust: 100%;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .container {
@@ -42,7 +47,7 @@
       padding: 20px;
     }
 
-    /* HEADER — ESTILO ANILIST */
+    /* HEADER */
     header {
       display: flex;
       justify-content: space-between;
@@ -74,11 +79,10 @@
       color: var(--accent);
     }
 
-    .hamburger {
-      display: none;
+    .theme-toggle {
       background: none;
       border: none;
-      font-size: 24px;
+      font-size: 20px;
       color: var(--text);
       cursor: pointer;
     }
@@ -131,6 +135,7 @@
     .filter-btn:hover, .filter-btn.active {
       background: var(--accent);
       border-color: var(--accent);
+      color: white;
     }
 
     /* SECTION TITLE */
@@ -217,9 +222,6 @@
       .nav-menu {
         display: none;
       }
-      .hamburger {
-        display: block;
-      }
       .anime-card {
         min-width: 140px;
       }
@@ -237,9 +239,8 @@
         <a href="index.html">Home</a>
         <a href="schedule.html">Lançamentos</a>
         <a href="#">Explorar</a>
-        <a href="#">Lista</a>
       </nav>
-      <button class="hamburger">☰</button>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     </header>
 
     <div class="search-bar">
@@ -250,27 +251,19 @@
     <div class="filters">
       <div class="filter-btn active" data-type="all">Todos</div>
       <div class="filter-btn" data-type="tv">TV</div>
-      <div class="filter-btn" data-type="movie">Filme</div>
-      <div class="filter-btn" data-year="2025">2025</div>
-      <div class="filter-btn" data-year="2024">2024</div>
       <div class="filter-btn" data-genre="action">Ação</div>
       <div class="filter-btn" data-genre="romance">Romance</div>
+      <div class="filter-btn" data-year="2025">2025</div>
     </div>
 
     <h2 class="section-title">🔥 Destaques da Semana</h2>
-    <div class="carousel" id="trendingCarousel">
-      <!-- Carrossel será preenchido aqui -->
-    </div>
+    <div class="carousel" id="trendingCarousel"></div>
 
     <h2 class="section-title">⭐ Mais Populares</h2>
-    <div class="carousel" id="popularCarousel">
-      <!-- Carrossel será preenchido aqui -->
-    </div>
+    <div class="carousel" id="popularCarousel"></div>
 
     <h2 class="section-title">🎭 Sugestões Editoriais</h2>
-    <div class="carousel" id="editorialCarousel">
-      <!-- Carrossel será preenchido aqui -->
-    </div>
+    <div class="carousel" id="editorialCarousel"></div>
 
     <div id="loading" class="loading">Carregando animes... 🎌</div>
 
@@ -280,21 +273,37 @@
   </div>
 
   <script>
-    // Cache simples pra evitar "Too Many Requests"
-    const cache = new Map();
-    const CACHE_EXPIRY = 5 * 60 * 1000; // 5 minutos
+    // Tema claro/escuro
+    function toggleTheme() {
+      const html = document.getElementById('html');
+      const currentTheme = html.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      document.querySelector('.theme-toggle').innerText = newTheme === 'dark' ? '🌕' : '🌑';
+    }
 
-    async function fetchData(url) {
+    // Carrega tema salvo
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.getElementById('html').setAttribute('data-theme', savedTheme);
+    document.querySelector('.theme-toggle').innerText = savedTheme === 'dark' ? '🌕' : '🌑';
+
+    // Cache client-side
+    const clientCache = new Map();
+    const CACHE_EXPIRY = 5 * 60 * 1000;
+
+    async function fetchData(endpoint) {
+      const url = `https://download.carlitosmarques08.workers.dev${endpoint}`;
       const now = Date.now();
-      
-      if (cache.has(url) && now - cache.get(url).timestamp < CACHE_EXPIRY) {
-        return cache.get(url).data;
+
+      if (clientCache.has(url) && now - clientCache.get(url).timestamp < CACHE_EXPIRY) {
+        return clientCache.get(url).data;
       }
 
       const response = await fetch(url);
       const data = await response.json();
-      
-      cache.set(url, {
+
+      clientCache.set(url, {
         data: data,
         timestamp: now
       });
@@ -308,7 +317,7 @@
       loading.style.display = 'block';
 
       try {
-        const data = await fetchData(`https://download.carlitosmarques08.workers.dev${endpoint}`);
+        const data = await fetchData(endpoint);
         
         if (data.error) {
           throw new Error(data.error);
@@ -331,14 +340,14 @@
       }
     }
 
-    // Carrega todas as seções ao iniciar
+    // Carrega ao iniciar
     document.addEventListener('DOMContentLoaded', () => {
       loadSection('/api/trending', 'trendingCarousel');
       loadSection('/api/popular', 'popularCarousel');
       loadSection('/api/editorial', 'editorialCarousel');
     });
 
-    // Busca por nome
+    // Busca
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         const query = this.value.trim();
@@ -346,18 +355,6 @@
           window.location.href = `search.html?q=${encodeURIComponent(query)}`;
         }
       }
-    });
-
-    // Filtros (simulação)
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Aqui você pode recarregar os carrosséis com os filtros aplicados
-        // Por enquanto, só simulação
-        alert(`Filtro aplicado: ${btn.textContent}`);
-      });
     });
   </script>
 </body>
