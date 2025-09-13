@@ -173,7 +173,7 @@
     </div>
 
     <footer>
-      <p>© 2025 fllops.dev — Feito com 💙 para fãs de anime.</p>
+      <p>© 2025 fllops.dev — Feito para fãs de anime.</p>
     </footer>
   </div>
 
@@ -193,7 +193,7 @@
       loading.style.display = 'block';
 
       try {
-        const response = await fetch(`https://anilist-fllops.carlitosmarques08.workers.dev/api/anime?id=${id}`);
+        const response = await fetch(`https://download.carlitosmarques08.workers.dev/api/anime?id=${id}`);
         const anime = await response.json();
 
         if (anime.error) {
