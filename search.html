@@ -8,13 +8,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #1e1e1e;
+      --bg: #0f0f0f;
       --text: #ffffff;
-      --text-secondary: #b3b3b3;
+      --text-secondary: #a0a0a0;
       --border: #333333;
-      --card-bg: #2a2a2a;
-      --accent: #2d4a9e;
-      --shadow: 0 2px 8px rgba(0,0,0,0.3);
+      --card-bg: #1a1a1a;
+      --accent: #7d5fff;
+      --shadow: 0 8px 32px rgba(0,0,0,0.3);
     }
 
     [data-theme="light"] {
@@ -22,8 +22,9 @@
       --text: #1a1a1a;
       --text-secondary: #666666;
       --border: #e0e0e0;
-      --card-bg: #f5f5f5;
-      --accent: #2d4a9e;
+      --card-bg: #f8f9fa;
+      --accent: #6c5ce7;
+      --shadow: 0 8px 32px rgba(0,0,0,0.1);
     }
 
     * {
@@ -47,31 +48,35 @@
       padding: 20px;
     }
 
-    /* HEADER */
+    /* HEADER MODERNO */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 0;
+      padding: 30px 0;
       border-bottom: 1px solid var(--border);
     }
 
     .logo {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
-      color: var(--accent);
+      background: linear-gradient(90deg, var(--accent), #a29bfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .nav-menu {
       display: flex;
-      gap: 24px;
+      gap: 32px;
     }
 
     .nav-menu a {
       color: var(--text);
       text-decoration: none;
       font-weight: 500;
-      font-size: 15px;
+      font-size: 16px;
+      position: relative;
       transition: color 0.3s ease;
     }
 
@@ -79,110 +84,262 @@
       color: var(--accent);
     }
 
-    .theme-toggle {
-      background: none;
-      border: none;
-      font-size: 20px;
-      color: var(--text);
-      cursor: pointer;
+    .nav-menu a::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
     }
 
-    /* SEARCH BAR */
+    .nav-menu a:hover::after {
+      width: 100%;
+    }
+
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(180deg);
+    }
+
+    /* SEARCH BAR MODERNO */
     .search-bar {
-      margin: 30px 0;
       position: relative;
+      margin: 60px 0 40px;
     }
 
     .search-bar input {
       width: 100%;
-      padding: 16px 20px;
-      padding-left: 50px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      padding: 25px 20px 25px 70px;
+      border: 3px solid var(--border);
+      border-radius: 20px;
       background: var(--card-bg);
       color: var(--text);
-      font-size: 16px;
+      font-size: 20px;
       outline: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .search-bar input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(125, 95, 255, 0.3);
     }
 
     .search-icon {
       position: absolute;
-      left: 16px;
+      left: 25px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-secondary);
+      font-size: 24px;
     }
 
     /* RESULTS */
     .section-title {
-      font-size: 28px;
+      font-size: 36px;
       font-weight: 700;
-      margin: 40px 0 30px;
+      margin: 60px 0 40px;
       color: var(--text);
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      width: 70px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
     }
 
     .anime-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 30px;
-      margin-bottom: 60px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 40px;
+      margin-bottom: 80px;
     }
 
     .anime-card {
       background: var(--card-bg);
-      border-radius: 8px;
+      border-radius: 24px;
       overflow: hidden;
       box-shadow: var(--shadow);
-      transition: transform 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
+      border: 3px solid transparent;
     }
 
     .anime-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-12px);
+      border-color: var(--accent);
+      box-shadow: 0 25px 50px rgba(125, 95, 255, 0.25);
     }
 
     .anime-card img {
       width: 100%;
-      height: 270px;
+      height: 340px;
       object-fit: cover;
       display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .anime-card:hover img {
+      transform: scale(1.05);
     }
 
     .anime-card .content {
-      padding: 12px;
+      padding: 25px;
     }
 
     .anime-card .title {
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 8px;
-      line-height: 1.3;
+      margin-bottom: 15px;
+      line-height: 1.4;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      color: var(--text);
     }
 
     .anime-card .meta {
-      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .anime-card .year {
       color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .anime-card .score {
+      background: var(--accent);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 4px 15px rgba(125, 95, 255, 0.3);
+    }
+
+    .genres-list {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .genre-tag {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-secondary);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 12px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 100px 20px;
+      color: var(--text-secondary);
+      font-size: 22px;
+    }
+
+    .empty-icon {
+      font-size: 80px;
+      margin-bottom: 30px;
+      color: var(--accent);
+    }
+
+    .search-suggestion {
+      text-align: center;
+      margin-top: 40px;
+      padding: 40px;
+      background: var(--card-bg);
+      border-radius: 24px;
+      border: 2px dashed var(--border);
+    }
+
+    .search-suggestion-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .search-suggestion-text {
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .suggestion-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(125, 95, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .suggestion-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(125, 95, 255, 0.5);
     }
 
     .loading {
       text-align: center;
-      padding: 40px;
+      padding: 80px;
       color: var(--accent);
       font-weight: 600;
+      font-size: 24px;
       display: none;
     }
 
     footer {
-      margin-top: 80px;
-      padding: 40px 0;
+      margin-top: 100px;
+      padding: 60px 0;
       text-align: center;
       color: var(--text-secondary);
       font-size: 14px;
       border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      .anime-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      .anime-card img {
+        height: 280px;
+      }
+      .section-title {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
@@ -194,20 +351,34 @@
         <a href="index.html">Home</a>
         <a href="schedule.html">Lançamentos</a>
       </nav>
-      <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+        </svg>
+      </button>
     </header>
 
     <div class="search-bar">
       <span class="search-icon">🔍</span>
-      <input type="text" id="searchInput" placeholder="Pesquise por nome de anime..." />
+      <input type="text" id="searchInput" placeholder="Pesquise por nome de anime, gênero, ano ou estúdio..." />
     </div>
 
     <h2 class="section-title">Resultados da Pesquisa</h2>
-    <div id="loading" class="loading">Pesquisando... 🎌</div>
+    <div id="loading" class="loading">Pesquisando no universo anime... 🎌</div>
     <div id="results" class="anime-grid"></div>
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="empty-icon">🔍</div>
+      <div>Nenhum anime encontrado para sua pesquisa.</div>
+      <div class="search-suggestion">
+        <div class="search-suggestion-title">Tente pesquisar por:</div>
+        <div class="search-suggestion-text">Naruto, One Piece, Jujutsu Kaisen, Ação, Romance, 2025</div>
+        <button class="suggestion-btn" onclick="location.reload()">Tentar novamente</button>
+      </div>
+    </div>
 
     <footer>
-      <p>© 2025 fllops.dev — Feito com 💙 para fãs de anime.</p>
+      <p>© 2025 fllops.dev — Feito com ❤️ para fãs de anime.</p>
     </footer>
   </div>
 
@@ -219,43 +390,66 @@
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
-      document.querySelector('.theme-toggle').innerText = newTheme === 'dark' ? '🌕' : '🌑';
     }
 
     // Carrega tema salvo
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.getElementById('html').setAttribute('data-theme', savedTheme);
-    document.querySelector('.theme-toggle').innerText = savedTheme === 'dark' ? '🌕' : '🌑';
 
     async function pesquisar(query) {
       const loading = document.getElementById('loading');
       const resultsDiv = document.getElementById('results');
+      const emptyState = document.getElementById('emptyState');
       loading.style.display = 'block';
       resultsDiv.innerHTML = '';
+      emptyState.style.display = 'none';
 
       try {
         const response = await fetch(`https://download.carlitosmarques08.workers.dev/api/search?q=${encodeURIComponent(query)}`);
-        const animes = await response.json();
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+        let animes;
+        try {
+          animes = JSON.parse(text);
+        } catch (e) {
+          throw new Error("Resposta não é JSON válido");
+        }
 
         if (animes.error) {
           throw new Error(animes.error);
         }
 
+        if (!Array.isArray(animes) || animes.length === 0) {
+          loading.style.display = 'none';
+          emptyState.style.display = 'block';
+          return;
+        }
+
         resultsDiv.innerHTML = animes.map(anime => `
           <div class="anime-card" onclick="window.location.href='anime.html?id=${anime.id}'">
-            <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/250x350/2a2a2a/ffffff?text=Anime'">
+            <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/280x340/1a1a1a/ffffff?text=Anime'">
             <div class="content">
               <div class="title">${anime.title}</div>
-              <div class="meta">${anime.year} • ⭐ ${anime.score}</div>
-              <div class="meta">${anime.genres?.slice(0, 2).join(', ') || ''}</div>
+              <div class="genres-list">
+                ${anime.genres?.slice(0, 3).map(genre => `
+                  <div class="genre-tag">${genre}</div>
+                `).join('') || '<div class="genre-tag">Sem gênero</div>'}
+              </div>
+              <div class="meta">
+                <div class="year">${anime.year}</div>
+                <div class="score">${anime.score}</div>
+              </div>
             </div>
           </div>
         `).join('');
 
         loading.style.display = 'none';
+        resultsDiv.style.display = 'grid';
       } catch (error) {
-        loading.innerText = "Erro ao pesquisar: " + error.message;
-        console.error(error);
+        console.error("Erro completo:", error);
+        loading.innerHTML = `<div style="color: var(--accent); font-size: 24px; font-weight: 600;">Erro ao pesquisar: ${error.message}</div>`;
       }
     }
 
