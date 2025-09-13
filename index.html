@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>fllops.dev — Animes</title>
+  <meta name="description" content="Descubra, acompanhe e explore animes. Lançamentos, detalhes, horários de episódios — tudo num só lugar.">
+  <!-- 🔍 Google Search Console -->
+  <meta name="google-site-verification" content="lrfXnDIgUTuzmP2fNC4M6sUOpiewQPZbv2JIgM1xLlk" />
+  <!-- 💰 Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2569329537599023" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-2569329537599023">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --text-secondary: #666666;
+      --border: #e0e0e0;
+      --card-bg: #fafafa;
+      --accent: #2d4a9e;
+      --shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 30px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    nav a {
+      margin-left: 24px;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    .search-box {
+      margin: 40px 0;
+      display: flex;
+      gap: 12px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 16px 20px;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .search-box button {
+      padding: 16px 24px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 60px 0 30px;
+      color: var(--text);
+    }
+
+    .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .anime-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .anime-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .anime-card img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .anime-card .content {
+      padding: 20px;
+    }
+
+    .anime-card .title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .anime-card .meta {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .anime-card .score {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    footer {
+      margin-top: 80px;
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 20px;
+      }
+      nav a {
+        margin: 0 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">fllops.dev</div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="schedule.html">Lançamentos</a>
+      </nav>
+    </header>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Pesquise por nome de anime..." />
+      <button onclick="pesquisar()">Pesquisar</button>
+    </div>
+
+    <h2 class="section-title">Resultados da Pesquisa</h2>
+    <div id="results" class="anime-grid">
+      <!-- Resultados aparecerão aqui -->
+    </div>
+
+    <div id="loading" style="text-align: center; padding: 40px; display: none;">Pesquisando... 🎌</div>
+
+    <footer>
+      <p>© 2025 fllops.dev — Feito com 💙 para fãs de anime.</p>
+    </footer>
+  </div>
+
+  <script>
+    async function pesquisar() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) {
+        alert("Digite o nome de um anime!");
+        return;
+      }
+
+      const loading = document.getElementById('loading');
+      const resultsDiv = document.getElementById('results');
+      loading.style.display = 'block';
+      resultsDiv.innerHTML = '';
+
+      try {
+        const response = await fetch(`https://anilist-fllops.carlitosmarques08.workers.dev/api/search?q=${encodeURIComponent(query)}`);
+        const animes = await response.json();
+
+        if (animes.error) {
+          loading.innerText = "Erro: " + animes.error;
+          return;
+        }
+
+        resultsDiv.innerHTML = animes.map(anime => `
+          <div class="anime-card" onclick="window.location.href='anime.html?id=${anime.id}'">
+            <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/250x350?text=Anime'">
+            <div class="content">
+              <div class="title">${anime.title}</div>
+              <div class="meta">${anime.year} • ${anime.episodes || '?'} eps • ${anime.status}</div>
+              <div class="meta"><span class="score">${anime.score}/100</span> • ${anime.genres?.slice(0, 2).join(', ') || ''}</div>
+            </div>
+          </div>
+        `).join('');
+
+        loading.style.display = 'none';
+      } catch (error) {
+        loading.innerText = "Erro ao pesquisar: " + error.message;
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
