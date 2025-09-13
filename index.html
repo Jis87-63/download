@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>fllops.dev — Animes</title>
   <meta name="description" content="Descubra, acompanhe e explore animes. Lançamentos, detalhes, horários de episódios — tudo num só lugar.">
   <!-- 🔍 Google Search Console -->
@@ -13,13 +13,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #ffffff;
-      --text: #1a1a1a;
-      --text-secondary: #666666;
-      --border: #e0e0e0;
-      --card-bg: #fafafa;
+      --bg: #1e1e1e;
+      --text: #ffffff;
+      --text-secondary: #b3b3b3;
+      --border: #333333;
+      --card-bg: #2a2a2a;
       --accent: #2d4a9e;
-      --shadow: 0 2px 8px rgba(0,0,0,0.04);
+      --shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
     * {
@@ -33,19 +33,21 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 20px;
     }
 
+    /* HEADER — ESTILO ANILIST */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 30px 0;
+      padding: 20px 0;
       border-bottom: 1px solid var(--border);
     }
 
@@ -55,60 +57,108 @@
       color: var(--accent);
     }
 
-    nav a {
-      margin-left: 24px;
+    .nav-menu {
+      display: flex;
+      gap: 24px;
+    }
+
+    .nav-menu a {
       color: var(--text);
       text-decoration: none;
       font-weight: 500;
+      font-size: 15px;
       transition: color 0.3s ease;
     }
 
-    nav a:hover {
+    .nav-menu a:hover {
       color: var(--accent);
     }
 
-    .search-box {
-      margin: 40px 0;
-      display: flex;
-      gap: 12px;
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--text);
+      cursor: pointer;
     }
 
-    .search-box input {
-      flex: 1;
+    /* SEARCH BAR */
+    .search-bar {
+      margin: 30px 0;
+      position: relative;
+    }
+
+    .search-bar input {
+      width: 100%;
       padding: 16px 20px;
-      border: 2px solid var(--border);
-      border-radius: 16px;
+      padding-left: 50px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--text);
       font-size: 16px;
       outline: none;
     }
 
-    .search-box button {
-      padding: 16px 24px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 16px;
-      font-weight: 600;
-      cursor: pointer;
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
     }
 
+    /* FILTERS */
+    .filters {
+      display: flex;
+      gap: 16px;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* SECTION TITLE */
     .section-title {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 700;
-      margin: 60px 0 30px;
+      margin: 40px 0 20px;
       color: var(--text);
     }
 
-    .anime-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 30px;
-      margin-bottom: 60px;
+    /* CAROUSEL */
+    .carousel {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      padding: 20px 0;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
     }
 
     .anime-card {
+      min-width: 180px;
       background: var(--card-bg);
-      border-radius: 16px;
+      border-radius: 8px;
       overflow: hidden;
       box-shadow: var(--shadow);
       transition: transform 0.3s ease;
@@ -121,19 +171,19 @@
 
     .anime-card img {
       width: 100%;
-      height: 350px;
+      height: 270px;
       object-fit: cover;
       display: block;
     }
 
     .anime-card .content {
-      padding: 20px;
+      padding: 12px;
     }
 
     .anime-card .title {
-      font-size: 18px;
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       line-height: 1.3;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -142,14 +192,16 @@
     }
 
     .anime-card .meta {
-      font-size: 14px;
+      font-size: 12px;
       color: var(--text-secondary);
-      margin-bottom: 10px;
     }
 
-    .anime-card .score {
-      font-weight: 700;
+    .loading {
+      text-align: center;
+      padding: 40px;
       color: var(--accent);
+      font-weight: 600;
+      display: none;
     }
 
     footer {
@@ -162,12 +214,17 @@
     }
 
     @media (max-width: 768px) {
-      header {
-        flex-direction: column;
-        gap: 20px;
+      .nav-menu {
+        display: none;
       }
-      nav a {
-        margin: 0 12px;
+      .hamburger {
+        display: block;
+      }
+      .anime-card {
+        min-width: 140px;
+      }
+      .anime-card img {
+        height: 200px;
       }
     }
   </style>
@@ -176,68 +233,132 @@
   <div class="container">
     <header>
       <div class="logo">fllops.dev</div>
-      <nav>
+      <nav class="nav-menu">
         <a href="index.html">Home</a>
         <a href="schedule.html">Lançamentos</a>
+        <a href="#">Explorar</a>
+        <a href="#">Lista</a>
       </nav>
+      <button class="hamburger">☰</button>
     </header>
 
-    <div class="search-box">
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="Pesquise por nome de anime..." />
-      <button onclick="pesquisar()">Pesquisar</button>
     </div>
 
-    <h2 class="section-title">Resultados da Pesquisa</h2>
-    <div id="results" class="anime-grid">
-      <!-- Resultados aparecerão aqui -->
+    <div class="filters">
+      <div class="filter-btn active" data-type="all">Todos</div>
+      <div class="filter-btn" data-type="tv">TV</div>
+      <div class="filter-btn" data-type="movie">Filme</div>
+      <div class="filter-btn" data-year="2025">2025</div>
+      <div class="filter-btn" data-year="2024">2024</div>
+      <div class="filter-btn" data-genre="action">Ação</div>
+      <div class="filter-btn" data-genre="romance">Romance</div>
     </div>
 
-    <div id="loading" style="text-align: center; padding: 40px; display: none;">Pesquisando... 🎌</div>
+    <h2 class="section-title">🔥 Destaques da Semana</h2>
+    <div class="carousel" id="trendingCarousel">
+      <!-- Carrossel será preenchido aqui -->
+    </div>
+
+    <h2 class="section-title">⭐ Mais Populares</h2>
+    <div class="carousel" id="popularCarousel">
+      <!-- Carrossel será preenchido aqui -->
+    </div>
+
+    <h2 class="section-title">🎭 Sugestões Editoriais</h2>
+    <div class="carousel" id="editorialCarousel">
+      <!-- Carrossel será preenchido aqui -->
+    </div>
+
+    <div id="loading" class="loading">Carregando animes... 🎌</div>
 
     <footer>
-      <p>© 2025 fllops.dev — Feito para fãs de anime.</p>
+      <p>© 2025 fllops.dev — Feito com 💙 para fãs de anime.</p>
     </footer>
   </div>
 
   <script>
-    async function pesquisar() {
-      const query = document.getElementById('searchInput').value.trim();
-      if (!query) {
-        alert("Digite o nome de um anime!");
-        return;
+    // Cache simples pra evitar "Too Many Requests"
+    const cache = new Map();
+    const CACHE_EXPIRY = 5 * 60 * 1000; // 5 minutos
+
+    async function fetchData(url) {
+      const now = Date.now();
+      
+      if (cache.has(url) && now - cache.get(url).timestamp < CACHE_EXPIRY) {
+        return cache.get(url).data;
       }
 
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      cache.set(url, {
+        data: data,
+        timestamp: now
+      });
+
+      return data;
+    }
+
+    async function loadSection(endpoint, containerId) {
       const loading = document.getElementById('loading');
-      const resultsDiv = document.getElementById('results');
+      const container = document.getElementById(containerId);
       loading.style.display = 'block';
-      resultsDiv.innerHTML = '';
 
       try {
-        const response = await fetch(`https://download.carlitosmarques08.workers.dev/api/search?q=${encodeURIComponent(query)}`);
-        const animes = await response.json();
-
-        if (animes.error) {
-          loading.innerText = "Erro: " + animes.error;
-          return;
+        const data = await fetchData(`https://anilist-fllops.carlitosmarques08.workers.dev${endpoint}`);
+        
+        if (data.error) {
+          throw new Error(data.error);
         }
 
-        resultsDiv.innerHTML = animes.map(anime => `
+        container.innerHTML = data.map(anime => `
           <div class="anime-card" onclick="window.location.href='anime.html?id=${anime.id}'">
-            <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/250x350?text=Anime'">
+            <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/180x270/2a2a2a/ffffff?text=Anime'">
             <div class="content">
               <div class="title">${anime.title}</div>
-              <div class="meta">${anime.year} • ${anime.episodes || '?'} eps • ${anime.status}</div>
-              <div class="meta"><span class="score">${anime.score}/100</span> • ${anime.genres?.slice(0, 2).join(', ') || ''}</div>
+              <div class="meta">${anime.year} • ⭐ ${anime.score}</div>
             </div>
           </div>
         `).join('');
 
         loading.style.display = 'none';
       } catch (error) {
-        loading.innerText = "Erro ao pesquisar: " + error.message;
+        loading.innerText = "Erro: " + error.message;
         console.error(error);
       }
     }
+
+    // Carrega todas as seções ao iniciar
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSection('/api/trending', 'trendingCarousel');
+      loadSection('/api/popular', 'popularCarousel');
+      loadSection('/api/editorial', 'editorialCarousel');
+    });
+
+    // Busca por nome
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        const query = this.value.trim();
+        if (query) {
+          window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
+      }
+    });
+
+    // Filtros (simulação)
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Aqui você pode recarregar os carrosséis com os filtros aplicados
+        // Por enquanto, só simulação
+        alert(`Filtro aplicado: ${btn.textContent}`);
+      });
+    });
   </script>
 </body>
 </html>
